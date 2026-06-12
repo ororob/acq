@@ -1416,34 +1416,22 @@ display:none;
 }
 /* SHIPPING SECTION */
 
-.shipping{
-    padding:80px 10%;
-    text-align:center;
-}
-
-.shipping h2{
-    font-size:45px;
-    margin-bottom:40px;
-}
-
-.shipping-boxes{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:30px;
-}
-
 .ship-box{
-    width:300px;
-    background:#062033;
-    padding:30px;
-    border-radius:20px;
-    transition:0.3s;
-}
 
-.ship-box:hover{
-    background:#00d9ff;
-    color:#04141f;
+background:#fff;
+
+padding:35px;
+
+border-radius:25px;
+
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+transition:.5s;
+
+position:relative;
+
+overflow:hidden;
+
 }
 /* TRACKING SECTION */
 
