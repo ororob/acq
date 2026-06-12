@@ -11,14 +11,52 @@ menu.onclick = () => {
         menu.innerHTML="☰";
     }
 }
-// MOBILE MENU
-const menuToggle = document.getElementById("menuToggle");
-const navLinks = document.getElementById("navLinks");
+const heroImage = document.querySelector(".hero-image");
 
-menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
+document.addEventListener("mousemove", e => {
+
+    const x = (window.innerWidth / 2 - e.clientX) / 40;
+    const y = (window.innerHeight / 2 - e.clientY) / 40;
+
+    heroImage.style.transform =
+        `translate(${x}px, ${y}px)`;
+
+});
+const observer = new IntersectionObserver(entries => {
+
+    entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+            entry.target.classList.add("show");
+
+        }
+
+    });
+
 });
 
+document.querySelectorAll(".hero-content, .hero-image")
+.forEach(el => observer.observe(el));
+document.querySelectorAll(".stat-card").forEach(card => {
+
+    card.addEventListener("mousemove", e => {
+
+        const x = e.offsetX / card.offsetWidth - 0.5;
+        const y = e.offsetY / card.offsetHeight - 0.5;
+
+        card.style.transform =
+            `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        card.style.transform = "rotateX(0) rotateY(0)";
+
+    });
+
+});
 // NAVBAR SHADOW ON SCROLL
 window.addEventListener("scroll", () => {
     const header = document.querySelector(".header");
