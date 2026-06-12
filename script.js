@@ -97,6 +97,35 @@ function trackOrder() {
     const result = document.getElementById("trackingResult");
 
     const statusText = document.getElementById("statusText");
+    const counters=document.querySelectorAll(".counter");
+
+counters.forEach(counter=>{
+
+let target=+counter.dataset.target;
+
+let count=0;
+
+function update(){
+
+count+=target/100;
+
+if(count<target){
+
+counter.innerHTML=Math.floor(count);
+
+requestAnimationFrame(update);
+
+}else{
+
+counter.innerHTML=target+"+";
+
+}
+
+}
+
+update();
+
+});
 
     // ONLY VALID TRACKING ID
     const validID = "AWF-2047";
