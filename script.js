@@ -1,16 +1,16 @@
 
-window.addEventListener('scroll', () => {
+const menu = document.querySelector(".menu-toggle");
+const nav = document.querySelector(".nav-links");
 
-    const navbar = document.querySelector('.navbar');
+menu.onclick = () => {
+    nav.classList.toggle("active");
 
-    if(window.scrollY > 50){
-        navbar.style.background = '#021019';
+    if(nav.classList.contains("active")){
+        menu.innerHTML="✖";
+    }else{
+        menu.innerHTML="☰";
     }
-    else{
-        navbar.style.background = '#062033';
-    }
-
-});
+}
 // MOBILE MENU
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
