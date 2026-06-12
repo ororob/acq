@@ -57,6 +57,30 @@ document.querySelectorAll(".stat-card").forEach(card => {
     });
 
 });
+document.querySelectorAll(".fish-card").forEach(card=>{
+
+card.addEventListener("mousemove",(e)=>{
+
+const x=e.offsetX/card.offsetWidth-.5;
+
+const y=e.offsetY/card.offsetHeight-.5;
+
+card.style.transform=
+`perspective(1000px)
+rotateY(${x*12}deg)
+rotateX(${-y*12}deg)
+translateY(-12px)`;
+
+});
+
+card.addEventListener("mouseleave",()=>{
+
+card.style.transform=
+"perspective(1000px) rotateY(0) rotateX(0)";
+
+});
+
+});
 // NAVBAR SHADOW ON SCROLL
 window.addEventListener("scroll", () => {
     const header = document.querySelector(".header");
