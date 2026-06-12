@@ -57,31 +57,273 @@ document.querySelectorAll(".stat-card").forEach(card => {
     });
 
 });
-const boxes = document.querySelectorAll(".ship-box");
+/*=====================================
+      SHIPPING SECTION ANIMATIONS
+======================================*/
+
+// Select Elements
+const shipBoxes = document.querySelectorAll(".ship-box");
+const shipIcons = document.querySelectorAll(".ship-icon");
+const highlightItems = document.querySelectorAll(".highlight-item");
+const shippingSection = document.querySelector(".shipping");
+
+/*=====================================
+      SCROLL REVEAL
+======================================*/
 
 const observer = new IntersectionObserver((entries)=>{
 
-entries.forEach(entry=>{
+    entries.forEach(entry=>{
 
-if(entry.isIntersecting){
+        if(entry.isIntersecting){
 
-entry.target.classList.add("show");
+            entry.target.classList.add("show");
+
+        }
+
+    });
+
+},{
+    threshold:0.2
+});
+
+shipBoxes.forEach(box=>{
+
+    observer.observe(box);
+
+});
+
+/*=====================================
+      STAGGERED ANIMATION
+======================================*/
+
+shipBoxes.forEach((card,index)=>{
+
+    card.style.transitionDelay = `${index*0.12}s`;
+
+});
+
+/*=====================================
+      FLOATING UNDERWATER EFFECT
+======================================*/
+
+window.addEventListener("scroll",()=>{
+
+    const scroll = window.pageYOffset;
+
+    shipBoxes.forEach((card,index)=>{
+
+        const speed = (index+1)*0.12;
+
+        const y = Math.sin(scroll*0.01+index)*8;
+
+        card.style.transform =
+        `translateY(${y}px)`;
+
+    });
+
+});
+
+/*=====================================
+      3D TILT EFFECT
+======================================*/
+
+shipBoxes.forEach(card=>{
+
+    card.addEventListener("mousemove",(e)=>{
+
+        const rect = card.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+
+        const y = e.clientY - rect.top;
+
+        const rotateY = ((x/rect.width)-0.5)*16;
+
+        const rotateX = ((y/rect.height)-0.5)*-16;
+
+        card.style.transform =
+
+        `
+        perspective(1000px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateY(-10px)
+        scale(1.02)
+        `;
+
+    });
+
+    card.addEventListener("mouseleave",()=>{
+
+        card.style.transform="";
+
+    });
+
+});
+
+/*=====================================
+      FLOATING ICONS
+======================================*/
+
+shipIcons.forEach((icon,index)=>{
+
+    setInterval(()=>{
+
+        icon.animate([
+
+            {
+                transform:"translateY(0px)"
+            },
+
+            {
+                transform:"translateY(-10px)"
+            },
+
+            {
+                transform:"translateY(0px)"
+            }
+
+        ],{
+
+            duration:2500+(index*200),
+
+            iterations:1,
+
+            easing:"ease-in-out"
+
+        });
+
+    },2500+(index*300));
+
+});
+
+/*=====================================
+      AUTO BUBBLES
+======================================*/
+
+function createBubble(){
+
+    const bubble=document.createElement("span");
+
+    bubble.className="bubble";
+
+    bubble.style.left=Math.random()*100+"%";
+
+    const size=Math.random()*20+10;
+
+    bubble.style.width=size+"px";
+
+    bubble.style.height=size+"px";
+
+    bubble.style.animationDuration=
+    Math.random()*6+5+"s";
+
+    shippingSection.appendChild(bubble);
+
+    setTimeout(()=>{
+
+        bubble.remove();
+
+    },12000);
 
 }
 
+setInterval(createBubble,450);
+
+/*=====================================
+      PARALLAX BACKGROUND
+======================================*/
+
+document.addEventListener("mousemove",(e)=>{
+
+    const x=(window.innerWidth/2-e.clientX)/50;
+
+    const y=(window.innerHeight/2-e.clientY)/50;
+
+    shippingSection.style.backgroundPosition=
+
+    `${x}px ${y}px`;
+
 });
 
-},{
-threshold:.2
+/*=====================================
+      HIGHLIGHT CARD HOVER
+======================================*/
+
+highlightItems.forEach(item=>{
+
+    item.addEventListener("mousemove",(e)=>{
+
+        const rect=item.getBoundingClientRect();
+
+        const x=e.clientX-rect.left;
+
+        const y=e.clientY-rect.top;
+
+        item.style.background=
+
+        `radial-gradient(circle at ${x}px ${y}px,
+        rgba(255,255,255,.35),
+        #00bfff)`;
+
+    });
+
+    item.addEventListener("mouseleave",()=>{
+
+        item.style.background=
+        "linear-gradient(135deg,#00bfff,#0077ff)";
+
+    });
+
 });
 
-boxes.forEach(box=>{
+/*=====================================
+      CARD GLOW EFFECT
+======================================*/
 
-box.classList.add("hidden");
+shipBoxes.forEach(card=>{
 
-observer.observe(box);
+    card.addEventListener("mouseenter",()=>{
+
+        card.style.boxShadow=
+        "0 30px 60px rgba(0,191,255,.35)";
+
+    });
+
+    card.addEventListener("mouseleave",()=>{
+
+        card.style.boxShadow="";
+
+    });
 
 });
+
+/*=====================================
+      SMOOTH FADE FOR HEADER
+======================================*/
+
+const header=document.querySelector(".shipping-header");
+
+window.addEventListener("scroll",()=>{
+
+    const position=header.getBoundingClientRect().top;
+
+    const screen=window.innerHeight;
+
+    if(position<screen-120){
+
+        header.style.opacity="1";
+
+        header.style.transform="translateY(0)";
+
+    }
+
+});
+
+header.style.opacity="0";
+header.style.transform="translateY(50px)";
+header.style.transition="1s";
 document.querySelectorAll(".fish-card").forEach(card=>{
 
 card.addEventListener("mousemove",(e)=>{
