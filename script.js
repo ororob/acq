@@ -57,6 +57,31 @@ document.querySelectorAll(".stat-card").forEach(card => {
     });
 
 });
+const boxes = document.querySelectorAll(".ship-box");
+
+const observer = new IntersectionObserver((entries)=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add("show");
+
+}
+
+});
+
+},{
+threshold:.2
+});
+
+boxes.forEach(box=>{
+
+box.classList.add("hidden");
+
+observer.observe(box);
+
+});
 document.querySelectorAll(".fish-card").forEach(card=>{
 
 card.addEventListener("mousemove",(e)=>{
