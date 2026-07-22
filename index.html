@@ -1,839 +1,1546 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaWorld Aquarium Fish</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="James AquaWorld — premium, health-checked aquarium fish bred with care and delivered safely worldwide.">
+<title>James AquaWorld &middot; Premium Aquarium Fish</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+<!--
+  ============================================================
+  IMPLEMENTATION NOTES (read me)
+  ============================================================
+  This is a single self-contained file: the original project
+  linked out to style.css and script.js, but neither file was
+  provided, so all CSS/JS below is written inline to keep the
+  page fully functional the moment you open it. If you'd like
+  it split back into style.css / script.js / index.html for a
+  real project structure, that's a 2-minute copy/paste job —
+  just say the word.
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  Palette:      Deep Ocean Blue #023E8A · Aqua #00B4D8 · Emerald #2ECC71
+  Type:         Poppins (headings) + Inter (body/UI)
+  Major upgrades are called out in comments near each section.
+  ============================================================
+-->
+
+<style>
+:root{
+  --deep:#023E8A;
+  --deep-dark:#012449;
+  --aqua:#00B4D8;
+  --aqua-light:#48CAE4;
+  --emerald:#2ECC71;
+  --emerald-dark:#1FA35A;
+  --white:#FFFFFF;
+  --gray-50:#F6F9FC;
+  --gray-100:#EAF1F8;
+  --gray-300:#CBD8E6;
+  --gray-500:#5C7392;
+  --ink:#08192B;
+  --radius-lg:28px;
+  --radius-md:18px;
+  --shadow-soft:0 25px 60px -25px rgba(2,62,138,.25);
+  --shadow-pop:0 35px 70px -25px rgba(2,62,138,.4);
+  --glass-bg:rgba(255,255,255,.65);
+  --glass-border:rgba(255,255,255,.5);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0; font-family:'Inter', sans-serif; color:var(--ink);
+  background:var(--gray-50); overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.font-display{ font-family:'Poppins', sans-serif; margin:0; }
+p{ margin:0; }
+a{ text-decoration:none; color:inherit; }
+img{ max-width:100%; display:block; }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+ul{ list-style:none; margin:0; padding:0; }
+input,textarea,select{ font-family:inherit; }
+
+::selection{ background:var(--aqua); color:#fff; }
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--gray-50); }
+::-webkit-scrollbar-thumb{ background:var(--aqua); border-radius:10px; }
+
+.container{ max-width:1260px; margin:0 auto; padding:0 24px; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-size:.78rem; font-weight:700;
+  letter-spacing:.06em; color:var(--deep); background:rgba(0,180,216,.12); padding:8px 16px; border-radius:999px;
+}
+.section-header{ text-align:center; max-width:660px; margin:0 auto 56px; }
+.section-header h2{ font-size:clamp(1.9rem,4vw,2.7rem); font-weight:700; margin-top:16px; line-height:1.15; }
+.section-header p{ color:var(--gray-500); margin-top:14px; font-size:1.05rem; line-height:1.7; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+  outline:2px solid var(--aqua); outline-offset:3px;
+}
+
+/* Gradient text utility for premium emphasis */
+.grad-text{
+  background:linear-gradient(100deg, var(--aqua), var(--emerald));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
+/* ============ WAVE DIVIDERS ============ */
+.wave{ position:relative; height:0; line-height:0; }
+.wave svg{ position:absolute; left:0; width:100%; height:auto; display:block; }
+
+/* ============ 1. NAVBAR — sticky glass nav, animated logo + underline, glass mobile menu ============ */
+.header{ position:fixed; top:0; left:0; width:100%; z-index:1000; transition:.4s ease; padding:14px 0; }
+.header.scrolled{
+  background:rgba(255,255,255,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 10px 34px rgba(2,62,138,.1); padding:8px 0;
+}
+.navbar{ max-width:1320px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; }
+.logo{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.25rem; color:#fff; transition:color .4s ease; }
+.header.scrolled .logo{ color:var(--ink); }
+.logo .fish-emoji{
+  display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:13px;
+  background:linear-gradient(135deg, var(--aqua), var(--emerald)); font-size:1.25rem;
+  animation:bob 3.4s ease-in-out infinite;
+}
+@keyframes bob{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-4px) rotate(-6deg); } }
+.logo strong{ color:var(--aqua-light); }
+.header.scrolled .logo strong{ color:var(--deep); }
+
+.nav-links{ display:flex; align-items:center; gap:32px; }
+.nav-links a{ color:rgba(255,255,255,.85); font-weight:500; font-size:.95rem; position:relative; padding-bottom:4px; transition:.3s ease; }
+.header.scrolled .nav-links a{ color:var(--ink); }
+.nav-links a::after{ content:''; position:absolute; left:0; bottom:0; width:0; height:2px; background:var(--emerald); transition:.3s cubic-bezier(.22,1,.36,1); }
+.header.scrolled .nav-links a::after{ background:var(--deep); }
+.nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+.nav-links a.active{ color:var(--aqua-light); }
+.header.scrolled .nav-links a.active{ color:var(--deep); }
+
+.nav-right{ display:flex; align-items:center; gap:16px; }
+.shop-btn{
+  background:linear-gradient(135deg, var(--aqua), var(--emerald)); color:#fff; padding:13px 28px; border-radius:999px;
+  font-weight:700; font-size:.92rem; box-shadow:0 14px 28px -10px rgba(0,180,216,.55); transition:.35s ease;
+  position:relative; overflow:hidden;
+}
+.shop-btn::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(115deg, transparent 20%, rgba(255,255,255,.55) 40%, transparent 60%);
+  transform:translateX(-120%); transition:transform .7s ease;
+}
+.shop-btn:hover::before{ transform:translateX(120%); }
+.shop-btn:hover{ transform:translateY(-2px); box-shadow:0 20px 38px -10px rgba(0,180,216,.7); }
+
+.menu-toggle{
+  display:none; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.14); color:#fff;
+  align-items:center; justify-content:center; font-size:1.25rem; transition:.3s ease;
+}
+.header.scrolled .menu-toggle{ background:rgba(2,62,138,.08); color:var(--ink); }
+
+.mobile-panel{
+  position:fixed; top:0; right:-100%; width:min(340px,86vw); height:100vh; z-index:1100; padding:30px 26px;
+  background:rgba(1,36,73,.92); backdrop-filter:blur(20px); transition:right .45s cubic-bezier(.22,1,.36,1);
+  display:flex; flex-direction:column; gap:4px;
+}
+.mobile-panel.open{ right:0; }
+.mobile-panel a{ color:rgba(255,255,255,.88); font-weight:600; padding:15px 6px; border-bottom:1px solid rgba(255,255,255,.1); font-size:1.05rem; }
+.mobile-panel .close-panel{
+  align-self:flex-end; width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.12); color:#fff;
+  display:flex; align-items:center; justify-content:center; margin-bottom:14px; font-size:1.1rem;
+}
+.mobile-panel .shop-btn{ margin-top:22px; text-align:center; }
+.scrim{ position:fixed; inset:0; background:rgba(2,20,40,.55); z-index:1050; opacity:0; pointer-events:none; transition:opacity .4s ease; }
+.scrim.show{ opacity:1; pointer-events:auto; }
+
+/* ============ 2. HERO — gradient overlay, floating fish, bubbles, glass CTAs, stat cards ============ */
+.hero{
+  position:relative; min-height:100vh; display:flex; align-items:center; overflow:hidden;
+  padding:150px 0 110px;
+  background:
+    linear-gradient(160deg, rgba(1,36,73,.94), rgba(2,62,138,.86) 45%, rgba(0,150,180,.7)),
+    url('https://images.unsplash.com/photo-1691387747539-f681c5fa73d9?auto=format&fit=crop&w=1600&q=60') center/cover;
+}
+.bubble-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+.bubble{
+  position:absolute; bottom:-40px; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(72,202,228,.05) 70%);
+  border:1px solid rgba(255,255,255,.18); animation:rise linear infinite;
+}
+@keyframes rise{
+  0%{ transform:translateY(0) translateX(0); opacity:0; }
+  8%{ opacity:.85; }
+  100%{ transform:translateY(-115vh) translateX(var(--drift,20px)); opacity:0; }
+}
+.floating-fish{ position:absolute; font-size:2rem; opacity:.5; filter:drop-shadow(0 8px 16px rgba(0,0,0,.25)); animation:swim 16s ease-in-out infinite; z-index:1; }
+@keyframes swim{
+  0%{ transform:translate(0,0) scaleX(1); }
+  25%{ transform:translate(40px,-25px) scaleX(1); }
+  50%{ transform:translate(0,-45px) scaleX(-1); }
+  75%{ transform:translate(-40px,-20px) scaleX(-1); }
+  100%{ transform:translate(0,0) scaleX(1); }
+}
+
+.hero-content{ position:relative; z-index:2; max-width:800px; margin:0 auto; padding:0 24px; text-align:center; }
+.hero-content .eyebrow{ background:rgba(72,202,228,.16); color:#bdf0fb; }
+.hero-content h1{ color:#fff; font-size:clamp(2.4rem,5.6vw,4.2rem); font-weight:700; line-height:1.12; margin-top:22px; letter-spacing:-.01em; }
+.hero-content h1 span{ background:linear-gradient(100deg, var(--aqua-light), var(--emerald)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.hero-subtext{ color:rgba(255,255,255,.78); font-size:1.08rem; line-height:1.75; max-width:620px; margin:22px auto 34px; }
+
+.hero-buttons{ display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
+.hero-buttons button{ font-size:1rem; font-weight:700; padding:16px 32px; border-radius:999px; transition:.35s ease; }
+.hero-buttons button:first-child{
+  background:linear-gradient(135deg, var(--aqua), var(--emerald)); color:#fff;
+  box-shadow:0 18px 36px -10px rgba(0,180,216,.6); position:relative; overflow:hidden;
+}
+.hero-buttons button:first-child::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(115deg, transparent 20%, rgba(255,255,255,.5) 40%, transparent 60%);
+  transform:translateX(-120%); transition:transform .7s ease;
+}
+.hero-buttons button:first-child:hover::before{ transform:translateX(120%); }
+.hero-buttons button:first-child:hover{ transform:translateY(-3px); }
+.hero-buttons .secondary{
+  background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.3); backdrop-filter:blur(8px);
+}
+.hero-buttons .secondary:hover{ background:rgba(255,255,255,.18); transform:translateY(-3px); }
+
+/* glass stat cards */
+.hero-stats{ display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:52px; }
+.hero-stat{
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(10px);
+  border-radius:18px; padding:16px 26px; min-width:140px; transition:.35s ease;
+}
+.hero-stat:hover{ background:rgba(255,255,255,.16); transform:translateY(-4px); }
+.hero-stat h3{ color:#fff; font-size:1.5rem; font-weight:800; font-variant-numeric:tabular-nums; }
+.hero-stat p{ color:rgba(255,255,255,.68); font-size:.78rem; font-weight:600; margin-top:2px; }
+
+.hero-badges{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:26px; }
+.hero-badges .badge{
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); color:rgba(255,255,255,.85);
+  font-size:.85rem; font-weight:600; padding:10px 18px; border-radius:999px; backdrop-filter:blur(6px);
+}
+
+/* ============ 3. FISH COLLECTION — toolbar (search/filter/sort), premium cards, pagination ============ */
+.fish-section{ padding:110px 0 100px; background:var(--gray-50); position:relative; }
+
+.fish-toolbar{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;
+  background:#fff; border-radius:22px; padding:18px 22px; box-shadow:var(--shadow-soft); margin-bottom:40px;
+}
+.filter-pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.filter-pill{
+  padding:9px 18px; border-radius:999px; font-size:.85rem; font-weight:600; color:var(--gray-500);
+  background:var(--gray-100); transition:.3s ease;
+}
+.filter-pill:hover{ color:var(--deep); }
+.filter-pill.active{ background:linear-gradient(135deg, var(--deep), var(--aqua)); color:#fff; }
+
+.toolbar-controls{ display:flex; gap:10px; flex-wrap:wrap; }
+.search-box{ position:relative; }
+.search-box input{
+  border:1.5px solid var(--gray-100); background:var(--gray-50); border-radius:999px; padding:10px 16px 10px 38px;
+  font-size:.88rem; outline:none; transition:.3s ease; width:190px;
+}
+.search-box input:focus{ border-color:var(--aqua); box-shadow:0 0 0 4px rgba(0,180,216,.12); background:#fff; }
+.search-box i{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--gray-500); font-size:.85rem; }
+.sort-select{
+  border:1.5px solid var(--gray-100); background:var(--gray-50); border-radius:999px; padding:10px 16px;
+  font-size:.85rem; font-weight:600; color:var(--ink); outline:none; transition:.3s ease;
+}
+.sort-select:focus{ border-color:var(--aqua); }
+
+.fish-container{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
+.fish-card{
+  --accent: var(--deep);
+  background:#fff; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-soft);
+  transition:.5s cubic-bezier(.22,1,.36,1); display:flex; flex-direction:column; position:relative;
+}
+.fish-card:hover{ transform:translateY(-9px); box-shadow:var(--shadow-pop); }
+.fish-card.is-hidden{ display:none; }
+
+.fish-image{ position:relative; overflow:hidden; aspect-ratio:4/3; }
+.fish-image img{ width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,1,.36,1); }
+.fish-card:hover .fish-image img{ transform:scale(1.12) rotate(-2deg); }
+
+.badge-row{ position:absolute; top:14px; left:14px; right:14px; display:flex; justify-content:space-between; align-items:flex-start; z-index:2; }
+.tag-badge{ background:var(--accent); color:#fff; font-size:.7rem; font-weight:700; padding:6px 13px; border-radius:999px; }
+.stock-badge{ background:rgba(46,204,113,.15); color:var(--emerald-dark); font-size:.68rem; font-weight:700; padding:5px 11px; border-radius:999px; backdrop-filter:blur(4px); }
+.stock-badge.low{ background:rgba(255,122,92,.16); color:#d9532b; }
+.discount-badge{ background:#fff; color:#e74c3c; font-size:.68rem; font-weight:800; padding:5px 10px; border-radius:999px; margin-left:6px; }
+
+.wishlist-btn{
+  position:absolute; bottom:12px; right:12px; z-index:2; width:38px; height:38px; border-radius:50%;
+  background:rgba(255,255,255,.92); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center;
+  color:var(--gray-500); font-size:1rem; box-shadow:0 8px 18px rgba(2,62,138,.18); transition:.3s ease;
+}
+.wishlist-btn:hover{ transform:scale(1.1); }
+.wishlist-btn.active{ color:#e74c3c; }
+.wishlist-btn.active i{ font-weight:900; }
+
+.quickview-btn{
+  position:absolute; left:50%; bottom:14px; transform:translate(-50%,14px); z-index:2;
+  background:var(--ink); color:#fff; font-size:.78rem; font-weight:700; padding:9px 18px; border-radius:999px;
+  opacity:0; transition:.35s ease; white-space:nowrap;
+}
+.fish-card:hover .quickview-btn{ opacity:1; transform:translate(-50%,0); }
+
+.fish-info{ padding:22px 22px 24px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.fish-category{ font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+.fish-info h3{ font-size:1.2rem; font-weight:700; }
+.fish-info > p.fish-desc{ color:var(--gray-500); font-size:.9rem; line-height:1.6; flex:1; }
+.fish-rating{ font-size:.8rem; color:#f5b642; }
+.fish-rating small{ color:var(--gray-500); font-weight:500; margin-left:4px; }
+
+.fish-footer{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+.price-wrap{ display:flex; align-items:baseline; gap:8px; }
+.fish-footer .price{ font-size:1.3rem; font-weight:800; color:var(--ink); }
+.fish-footer .old-price{ font-size:.85rem; color:var(--gray-500); text-decoration:line-through; }
+.add-cart-btn{
+  background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-weight:600; font-size:.85rem;
+  transition:.3s ease; position:relative; overflow:hidden;
+}
+.add-cart-btn:hover{ background:var(--accent); transform:translateY(-2px); }
+.add-cart-btn.added{ background:var(--emerald); }
+
+.fish-empty{ grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray-500); }
+
+.pagination{ display:flex; justify-content:center; align-items:center; gap:8px; margin-top:48px; flex-wrap:wrap; }
+.page-btn{
+  width:42px; height:42px; border-radius:12px; background:#fff; box-shadow:var(--shadow-soft); font-weight:700;
+  color:var(--gray-500); transition:.3s ease; display:flex; align-items:center; justify-content:center;
+}
+.page-btn:hover{ color:var(--deep); }
+.page-btn.active{ background:linear-gradient(135deg, var(--deep), var(--aqua)); color:#fff; }
+.page-btn.nav-btn{ width:auto; padding:0 16px; gap:6px; }
+
+/* ============ 4. ABOUT — collage, floating cards, counters ============ */
+.about{ padding:110px 0; background:#fff; }
+.about-container{ display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
+.about-collage{ position:relative; height:460px; }
+.about-collage img{ position:absolute; border-radius:22px; box-shadow:var(--shadow-soft); object-fit:cover; }
+.collage-main{ width:72%; height:88%; top:0; left:0; }
+.collage-sub{ width:52%; height:52%; bottom:0; right:0; border:6px solid #fff; }
+.experience-card, .customer-card{
+  position:absolute; background:#fff; border-radius:16px; box-shadow:0 20px 40px -12px rgba(2,62,138,.22); padding:16px 20px; z-index:3;
+}
+.experience-card{ top:20px; left:-16px; text-align:center; }
+.experience-card h2{ font-size:1.8rem; color:var(--deep); font-weight:800; }
+.experience-card p{ font-size:.75rem; color:var(--gray-500); font-weight:600; margin-top:2px; }
+.customer-card{ bottom:16px; left:20px; font-weight:700; color:var(--ink); font-size:.92rem; display:flex; align-items:center; gap:6px; }
+
+.about-content .eyebrow{ margin-bottom:16px; }
+.about-content h2{ font-size:clamp(1.9rem,4vw,2.6rem); font-weight:700; line-height:1.2; }
+.about-intro{ color:var(--gray-500); line-height:1.8; margin-top:20px; font-size:1rem; }
+.about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:32px; }
+.about-box{ background:var(--gray-50); border-radius:16px; padding:20px; transition:.35s ease; }
+.about-box:hover{ background:var(--gray-100); transform:translateY(-4px); }
+.about-box .icon{ font-size:1.5rem; margin-bottom:8px; }
+.about-box h3{ font-size:1rem; font-weight:700; }
+.about-box p{ font-size:.85rem; color:var(--gray-500); margin-top:4px; line-height:1.5; }
+
+.about-stats{ display:flex; gap:40px; margin-top:40px; flex-wrap:wrap; }
+.stat h3{ font-size:2.1rem; font-weight:800; color:var(--deep); }
+.stat span{ font-size:.85rem; color:var(--gray-500); font-weight:600; }
+.about-btn{
+  display:inline-flex; align-items:center; gap:8px; margin-top:36px; background:linear-gradient(135deg, var(--deep), var(--aqua));
+  color:#fff; padding:16px 32px; border-radius:999px; font-weight:700; transition:.35s ease; box-shadow:0 16px 30px -10px rgba(2,62,138,.5);
+}
+.about-btn:hover{ transform:translateY(-3px); gap:12px; }
+
+/* ============ 5. SHIPPING — timeline with interactive progress line ============ */
+.shipping{ position:relative; padding:120px 0 100px; background:linear-gradient(160deg, var(--deep-dark), var(--deep) 60%, #015a8f); color:#fff; overflow:hidden; }
+.shipping-header{ text-align:center; max-width:660px; margin:0 auto 60px; position:relative; z-index:2; }
+.shipping-header .eyebrow{ background:rgba(72,202,228,.16); color:#bdf0fb; }
+.shipping-header h2{ color:#fff; font-size:clamp(1.9rem,4vw,2.7rem); margin-top:16px; font-weight:700; }
+.shipping-intro{ color:rgba(255,255,255,.7); margin-top:16px; line-height:1.75; font-size:1.02rem; }
+
+.shipping-timeline{ position:relative; z-index:2; margin-bottom:70px; }
+.timeline-track{
+  position:relative; height:4px; background:rgba(255,255,255,.14); border-radius:4px; margin:0 20px 46px;
+}
+.timeline-fill{ position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg, var(--aqua), var(--emerald)); border-radius:4px; transition:width 1.6s cubic-bezier(.22,1,.36,1); }
+.shipping-boxes{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+.ship-box{
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius-md);
+  padding:26px 22px; backdrop-filter:blur(6px); transition:.4s ease; position:relative;
+}
+.ship-box:hover{ background:rgba(255,255,255,.1); transform:translateY(-6px); border-color:rgba(72,202,228,.5); }
+.ship-icon{ font-size:1.7rem; margin-bottom:14px; display:inline-block; transition:transform .4s ease; }
+.ship-box:hover .ship-icon{ transform:scale(1.15) rotate(-6deg); }
+.ship-box .step{ display:block; font-size:.7rem; font-weight:700; letter-spacing:.08em; color:var(--aqua-light); margin-bottom:6px; }
+.ship-box h3{ font-size:1.05rem; font-weight:700; color:#fff; }
+.ship-box p{ font-size:.86rem; color:rgba(255,255,255,.62); margin-top:8px; line-height:1.6; }
+
+.shipping-highlight{
+  position:relative; z-index:2; display:grid; grid-template-columns:repeat(4,1fr); gap:22px;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius-lg); padding:36px 30px;
+}
+.highlight-item{ text-align:center; }
+.highlight-icon{ font-size:1.8rem; margin-bottom:12px; }
+.highlight-item h3{ font-size:1rem; color:#fff; font-weight:700; }
+.highlight-item p{ font-size:.85rem; color:rgba(255,255,255,.62); margin-top:6px; }
+
+/* ============ 6. TRACKING — logistics dashboard with route map ============ */
+.tracking{ padding:110px 0; background:var(--gray-50); }
+.tracking-header{ text-align:center; }
+.tracking-header h2{ font-size:clamp(1.9rem,4vw,2.6rem); font-weight:700; }
+.tracking-sub{ color:var(--gray-500); margin-top:14px; font-size:1.02rem; }
+
+.tracking-dashboard{ max-width:940px; margin:44px auto 0; display:grid; grid-template-columns:1fr; gap:24px; }
+.tracking-input{ display:flex; gap:12px; background:#fff; padding:8px; border-radius:999px; box-shadow:var(--shadow-soft); flex-wrap:wrap; }
+.tracking-input input{ flex:1; min-width:200px; border:none; outline:none; padding:14px 20px; border-radius:999px; font-size:.95rem; background:transparent; }
+.tracking-input button{
+  background:linear-gradient(135deg, var(--deep), var(--aqua)); color:#fff; font-weight:700; padding:14px 30px; border-radius:999px;
+  transition:.3s ease; white-space:nowrap;
+}
+.tracking-input button:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+
+.tracking-result{ background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-soft); padding:34px; text-align:left; }
+.tracking-status{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.tracking-status h3{ font-size:1.1rem; font-weight:700; }
+.tracking-status span{ color:var(--deep); }
+.status-pill{ background:rgba(46,204,113,.15); color:var(--emerald-dark); font-size:.78rem; font-weight:700; padding:6px 14px; border-radius:999px; }
+
+/* route map illustration */
+.route-map{
+  margin:26px 0; border-radius:18px; background:linear-gradient(135deg,#eaf6fb,#e4f8ee); padding:24px; position:relative; overflow:hidden;
+}
+.route-map svg{ width:100%; height:auto; display:block; }
+.route-progress{ stroke-dasharray:600; stroke-dashoffset:600; transition:stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1); }
+.route-dot{ transition:offset-distance 1.6s cubic-bezier(.22,1,.36,1); }
+
+.tracking-steps{ display:flex; justify-content:space-between; margin:30px 0; position:relative; flex-wrap:wrap; gap:14px 0; }
+.tracking-steps::before{ content:''; position:absolute; top:11px; left:5%; right:5%; height:3px; background:var(--gray-100); z-index:0; }
+.tracking-steps::after{ content:''; position:absolute; top:11px; left:5%; height:3px; background:linear-gradient(90deg,var(--deep),var(--aqua)); width:0%; z-index:1; transition:width 1.2s cubic-bezier(.22,1,.36,1); }
+.tracking-steps.p1::after{ width:0%; } .tracking-steps.p2::after{ width:23%; } .tracking-steps.p3::after{ width:47%; }
+.tracking-steps.p4::after{ width:70%; } .tracking-steps.p5::after{ width:90%; }
+.tracking-steps .step{ position:relative; z-index:2; flex:1; text-align:center; font-size:.78rem; font-weight:700; color:var(--gray-500); min-width:80px; }
+.tracking-steps .step::before{ content:''; display:block; width:24px; height:24px; border-radius:50%; background:#fff; border:3px solid var(--gray-100); margin:0 auto 10px; transition:.4s ease; }
+.tracking-steps .step.done{ color:var(--deep); }
+.tracking-steps .step.done::before{ background:var(--aqua); border-color:var(--aqua); }
+
+.tracking-details{ border-top:1px solid var(--gray-100); padding-top:22px; display:grid; gap:8px; }
+.tracking-details p{ font-size:.92rem; color:var(--gray-500); }
+.tracking-details strong{ color:var(--ink); }
+
+/* ============ 7. TESTIMONIALS — glass carousel, verified badges, auto-slide ============ */
+.testimonials{ padding:110px 0; background:#fff; position:relative; overflow:hidden; }
+.testimonial-viewport{ overflow:hidden; max-width:760px; margin:0 auto; }
+.testimonial-track{ display:flex; transition:transform .6s cubic-bezier(.22,1,.36,1); }
+.testimonial-slide{ min-width:100%; padding:6px; }
+.testimonial-card{
+  background:linear-gradient(160deg, var(--gray-50), var(--gray-100)); border:1px solid rgba(2,62,138,.06);
+  border-radius:var(--radius-lg); padding:40px 38px; text-align:center;
+}
+.quote-icon{ font-size:2.6rem; color:var(--aqua); opacity:.4; font-family:Georgia, serif; line-height:1; }
+.testimonial-text{ margin-top:10px; font-size:1.1rem; line-height:1.75; color:var(--ink); }
+.customer-info{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:26px; }
+.customer-info img{ width:50px; height:50px; border-radius:50%; background:var(--gray-100); }
+.customer-info h4{ font-size:.98rem; font-weight:700; display:flex; align-items:center; gap:6px; justify-content:center; }
+.customer-info h4 i{ color:var(--aqua); font-size:.85rem; }
+.customer-info span{ font-size:.8rem; color:var(--gray-500); }
+.stars{ color:#f5b642; margin-top:16px; letter-spacing:2px; }
+
+.testimonial-dots{ display:flex; justify-content:center; gap:8px; margin-top:30px; }
+.dot{ width:9px; height:9px; border-radius:50%; background:var(--gray-300); transition:.3s ease; }
+.dot.active{ width:26px; border-radius:6px; background:var(--deep); }
+
+/* ============ 8. CONTACT — glass form w/ floating labels, map, WhatsApp ============ */
+.contact{ padding:110px 0 100px; background:var(--gray-50); }
+.contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start; }
+
+.contact-form-wrap{
+  background:var(--glass-bg); backdrop-filter:blur(14px); border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg); padding:40px; box-shadow:var(--shadow-soft); position:relative; isolation:isolate;
+}
+.contact-form-wrap::before{
+  content:''; position:absolute; inset:-1.5px; z-index:-1; border-radius:30px;
+  background:linear-gradient(135deg, var(--aqua), var(--emerald) 60%, var(--deep)); opacity:.4;
+}
+#contactForm{ display:grid; gap:24px; }
+.float-field{ position:relative; }
+.float-field input, .float-field textarea{
+  width:100%; border:1.5px solid var(--gray-300); border-radius:14px; padding:20px 18px 8px; font-size:.95rem;
+  outline:none; transition:.3s ease; resize:vertical; background:#fff;
+}
+.float-field label{
+  position:absolute; left:18px; top:18px; font-size:.95rem; color:var(--gray-500); pointer-events:none;
+  transition:.2s ease; background:transparent;
+}
+.float-field input:focus, .float-field textarea:focus{ border-color:var(--aqua); box-shadow:0 0 0 4px rgba(0,180,216,.14); }
+.float-field input:focus + label, .float-field input.filled + label,
+.float-field textarea:focus + label, .float-field textarea.filled + label{
+  top:7px; font-size:.72rem; font-weight:700; color:var(--deep);
+}
+.float-field small.error{ display:block; color:#e74c3c; font-size:.78rem; font-weight:600; margin-top:5px; min-height:14px; }
+.float-field.has-error input, .float-field.has-error textarea{ border-color:#e74c3c; }
+#contactForm button[type="submit"]{
+  background:linear-gradient(135deg, var(--deep), var(--aqua)); color:#fff; padding:17px; border-radius:14px;
+  font-weight:700; font-size:1rem; transition:.35s ease; box-shadow:0 16px 30px -10px rgba(2,62,138,.5);
+}
+#contactForm button[type="submit"]:hover{ transform:translateY(-2px); filter:brightness(1.06); }
+#successMessage{ text-align:center; font-weight:700; color:var(--emerald-dark); font-size:.95rem; min-height:20px; opacity:0; transition:opacity .4s ease; }
+#successMessage.show{ opacity:1; }
+
+.contact-side{ display:flex; flex-direction:column; gap:22px; }
+.info-card{
+  background:#fff; border-radius:20px; padding:22px; box-shadow:var(--shadow-soft); display:flex; gap:16px; align-items:center;
+}
+.info-card .icon{
+  width:50px; height:50px; border-radius:14px; background:rgba(0,180,216,.12); color:var(--deep);
+  display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;
+}
+.info-card h4{ font-size:.95rem; font-weight:700; }
+.info-card p{ font-size:.88rem; color:var(--gray-500); margin-top:2px; }
+
+.map-embed{ border-radius:20px; overflow:hidden; box-shadow:var(--shadow-soft); border:none; }
+.map-embed iframe{ width:100%; height:230px; border:0; display:block; }
+
+.whatsapp-fab{
+  position:fixed; bottom:28px; left:28px; width:58px; height:58px; border-radius:50%;
+  background:#25D366; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+  box-shadow:0 16px 34px -8px rgba(37,211,102,.6); z-index:900; transition:.35s ease;
+}
+.whatsapp-fab:hover{ transform:translateY(-4px) scale(1.05); }
+.whatsapp-fab::after{
+  content:''; position:absolute; inset:0; border-radius:50%; border:2px solid #25D366; animation:pulse-ring 2.4s ease-out infinite;
+}
+@keyframes pulse-ring{ 0%{ transform:scale(1); opacity:.6; } 100%{ transform:scale(1.6); opacity:0; } }
+
+/* ============ 9. NEWSLETTER — gradient section, validation, success state ============ */
+.newsletter{
+  position:relative; padding:80px 0; overflow:hidden;
+  background:linear-gradient(120deg, var(--deep), var(--aqua) 55%, var(--emerald));
+  background-size:200% 200%; animation:gradientShift 12s ease infinite;
+  color:#fff; text-align:center;
+}
+@keyframes gradientShift{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+.newsletter h2{ font-size:clamp(1.7rem,3.6vw,2.3rem); font-weight:700; }
+.newsletter p{ color:rgba(255,255,255,.82); margin-top:12px; max-width:480px; margin-left:auto; margin-right:auto; }
+.newsletter-form{ display:flex; justify-content:center; gap:10px; margin-top:30px; flex-wrap:wrap; }
+.newsletter-form input{
+  border:none; outline:none; padding:16px 22px; border-radius:999px; font-size:.95rem; width:320px; max-width:80vw;
+}
+.newsletter-form button{
+  background:var(--ink); color:#fff; font-weight:700; padding:16px 30px; border-radius:999px; transition:.3s ease; white-space:nowrap;
+}
+.newsletter-form button:hover{ background:#000; transform:translateY(-2px); }
+.newsletter-msg{ margin-top:16px; font-size:.9rem; font-weight:700; min-height:18px; opacity:0; transition:opacity .4s ease; }
+.newsletter-msg.show{ opacity:1; }
+
+/* ============ 10. FOOTER — payment icons, trust badges, quick links ============ */
+.footer{ background:var(--deep-dark); color:rgba(255,255,255,.62); padding:70px 0 30px; }
+.footer-container{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:44px; padding-bottom:44px; }
+.footer-brand h2{ color:#fff; font-size:1.5rem; font-weight:700; }
+.footer-brand p{ margin-top:14px; font-size:.9rem; line-height:1.6; }
+.footer-col h3{ color:#fff; font-size:1rem; font-weight:700; margin-bottom:18px; }
+.footer-links{ display:flex; flex-direction:column; }
+.footer-links a{ padding:8px 0; font-size:.9rem; transition:.3s ease; }
+.footer-links a:hover{ color:var(--aqua-light); padding-left:4px; }
+.trust-badges{ display:flex; flex-direction:column; gap:10px; }
+.trust-badges span{ font-size:.85rem; display:flex; align-items:center; gap:8px; }
+.trust-badges i{ color:var(--emerald); }
+.social-icons{ display:flex; gap:10px; margin-top:18px; }
+.social-icons a{ width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; transition:.3s ease; }
+.social-icons a:hover{ background:var(--aqua); color:#fff; transform:translateY(-3px); }
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.1); padding-top:24px; display:flex; flex-wrap:wrap; align-items:center;
+  justify-content:space-between; gap:16px; font-size:.85rem;
+}
+.payment-icons{ display:flex; gap:12px; font-size:1.4rem; color:rgba(255,255,255,.6); }
+
+.back-to-top{
+  position:fixed; bottom:28px; right:28px; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--deep), var(--aqua));
+  color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 14px 30px -8px rgba(2,62,138,.6); z-index:900;
+  opacity:0; pointer-events:none; transform:translateY(10px); transition:.35s ease;
+}
+.back-to-top.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-to-top:hover{ transform:translateY(-4px); }
+
+/* ============ REVEAL ANIMATION ============ */
+.reveal{ opacity:0; transform:translateY(30px); transition:opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+.reveal.is-visible{ opacity:1; transform:translateY(0); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1080px){
+  .fish-container{ grid-template-columns:repeat(2,1fr); }
+  .shipping-boxes, .shipping-highlight{ grid-template-columns:repeat(2,1fr); }
+  .about-container{ grid-template-columns:1fr; gap:60px; }
+  .about-collage{ max-width:460px; margin:0 auto; height:400px; }
+  .footer-container{ grid-template-columns:1fr 1fr; }
+  .contact-grid{ grid-template-columns:1fr; }
+}
+@media (max-width: 860px){
+  .nav-links{ display:none; }
+  .nav-right .shop-btn{ display:none; }
+  .menu-toggle{ display:flex; }
+  .fish-toolbar{ flex-direction:column; align-items:stretch; }
+  .toolbar-controls{ justify-content:space-between; }
+  .search-box input{ width:100%; }
+}
+@media (max-width: 640px){
+  .fish-container{ grid-template-columns:1fr; }
+  .shipping-boxes, .shipping-highlight{ grid-template-columns:1fr; }
+  .about-grid{ grid-template-columns:1fr; }
+  .about-stats{ gap:26px; }
+  .footer-container{ grid-template-columns:1fr; gap:36px; }
+  .hero{ padding:130px 0 80px; }
+  .experience-card{ left:6px; }
+  .tracking-input{ flex-direction:column; border-radius:20px; }
+  .tracking-input input, .tracking-input button{ width:100%; border-radius:14px; }
+  .tracking-steps{ flex-direction:column; align-items:flex-start; gap:16px; }
+  .tracking-steps::before, .tracking-steps::after{ display:none; }
+  .tracking-steps .step{ text-align:left; display:flex; align-items:center; gap:10px; }
+  .tracking-steps .step::before{ margin:0; }
+  .whatsapp-fab{ width:52px; height:52px; font-size:1.3rem; bottom:20px; left:20px; }
+  .back-to-top{ bottom:20px; right:20px; }
+  .newsletter-form input{ width:100%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .bubble, .reveal, .floating-fish, .logo .fish-emoji, .newsletter{ animation:none !important; }
+  .reveal{ transition:none !important; opacity:1 !important; transform:none !important; }
+}
+</style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
+<!-- ============ NAVBAR ============ -->
+<header class="header" id="header">
+  <nav class="navbar">
+    <a href="#home" class="logo">
+      <span class="fish-emoji">🐠</span>
+      James <strong>AquaWorld</strong>
+    </a>
 
-<header class="header">
-    <nav class="navbar">
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#fish">Fish</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#shipping">Shipping</a></li>
+      <li><a href="#tracking">Tracking</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
 
-        <a href="#" class="logo">
-            <span>🐠</span>
-            James <strong>AquaWorld</strong>
-        </a>
-
-        <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Fish</a></li>
-            <li><a href="#">Aquariums</a></li>
-            <li><a href="#">Accessories</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Shipping</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-
-        <div class="nav-right">
-
-            <button class="shop-btn">
-                Shop Now
-            </button>
-
-            <div class="menu-toggle">
-                ☰
-            </div>
-
-        </div>
-
-    </nav>
+    <div class="nav-right">
+      <button class="shop-btn" onclick="document.getElementById('fish').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+      <div class="menu-toggle" id="menuToggle" aria-label="Open menu"><i class="fa-solid fa-bars"></i></div>
+    </div>
+  </nav>
 </header>
-    <!-- HERO SECTION -->
+
+<div class="scrim" id="scrim"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="close-panel" id="closePanel"><i class="fa-solid fa-xmark"></i></div>
+  <a href="#home">Home</a>
+  <a href="#fish">Fish</a>
+  <a href="#about">About</a>
+  <a href="#shipping">Shipping</a>
+  <a href="#tracking">Tracking</a>
+  <a href="#contact">Contact</a>
+  <button class="shop-btn" onclick="document.getElementById('fish').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+</div>
+
+<!-- ============ HERO ============ -->
 <section class="hero" id="home">
-
-    <div class="hero-content">
-
-        <h1>
-            Premium <span>Aquarium Fish</span> Delivered Safely to Your Doorstep
-        </h1>
-
-        <p class="hero-subtext">
-            We breed and supply high-quality aquarium fish including Betta, Guppy, Goldfish, and more.
-            Every fish is health-checked, oxygen-packed, and shipped with live arrival care.
-        </p>
-
-        <div class="hero-buttons">
-
-            <button onclick="document.getElementById('fish').scrollIntoView({behavior:'smooth'})">
-                🐠 View Fish Collection
-            </button>
-
-            <button class="secondary" onclick="document.getElementById('shipping').scrollIntoView({behavior:'smooth'})">
-                🚚 Shipping Process
-            </button>
-
-        </div>
-
-        <div class="hero-badges">
-
-            <div class="badge">✔ Live Arrival Guarantee</div>
-            <div class="badge">✔ Safe Oxygen Packaging</div>
-            <div class="badge">✔ Fast 24–48h Delivery</div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-          <!-- FEATURED FISH -->
-
-<section class="fish-section" id="fish">
-
-    <div class="section-header">
-
-        <span class="section-tag">🐠 Premium Collection</span>
-
-        <h2>Discover Our Featured Aquarium Fish</h2>
-
-        <p>
-            Browse our carefully selected collection of healthy aquarium fish.
-            Every fish is professionally bred, health-checked, oxygen-packed,
-            and delivered safely to your home.
-        </p>
-
-    </div>
-
-    <div class="fish-container">
-
-        <!-- Fish 1 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish1.jpg" alt="Koi Betta">
-                <span class="badge">Best Seller</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Betta Series</div>
-
-                <h3>Koi Betta</h3>
-
-                <p>
-                    Premium colorful Betta with unique marble patterns and vibrant colors.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(248 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$25</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 2 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish2.jpg" alt="Halfmoon Betta">
-                <span class="badge">Popular</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Betta Series</div>
-
-                <h3>Halfmoon Betta</h3>
-
-                <p>
-                    Elegant flowing fins with stunning colors and graceful swimming.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(192 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$30</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 3 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish3.jpg" alt="Crowntail Betta">
-                <span class="badge">New</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Betta Series</div>
-
-                <h3>Crowntail Betta</h3>
-
-                <p>
-                    Beautiful spiky fins with a striking and aggressive appearance.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(174 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$28</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 4 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish4.jpg" alt="Fancy Guppy">
-                <span class="badge">Trending</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Guppy Series</div>
-
-                <h3>Fancy Guppies</h3>
-
-                <p>
-                    Vibrant beginner-friendly fish perfect for community aquariums.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(314 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$12</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 5 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish5.jpg" alt="Endler Guppy">
-                <span class="badge">Hot</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Guppy Series</div>
-
-                <h3>Endler Guppy</h3>
-
-                <p>
-                    Small, colorful, active fish ideal for nano aquarium setups.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(156 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$10</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 6 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish6.jpg" alt="Neon Tetra">
-                <span class="badge">Favorite</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Tetra Series</div>
-
-                <h3>Neon Tetra</h3>
-
-                <p>
-                    Bright blue and red schooling fish ideal for planted aquariums.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(221 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$8</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 7 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./fish7.jpg" alt="Goldfish">
-                <span class="badge">Classic</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Goldfish Series</div>
-
-                <h3>Goldfish</h3>
-
-                <p>
-                    Peaceful freshwater fish known for their beauty and longevity.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(275 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$15</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Fish 8 -->
-        <div class="fish-card">
-
-            <div class="fish-image">
-                <img src="./koi betta.jpg" alt="Angelfish">
-                <span class="badge">Premium</span>
-            </div>
-
-            <div class="fish-info">
-
-                <div class="fish-category">Angelfish Series</div>
-
-                <h3>Angelfish</h3>
-
-                <p>
-                    Elegant freshwater angelfish with tall graceful fins and vibrant colors.
-                </p>
-
-                <div class="fish-rating">
-                    ⭐⭐⭐⭐⭐ <small>(198 Reviews)</small>
-                </div>
-
-                <div class="fish-footer">
-                    <div class="price">$18</div>
-                    <button>Add to Cart</button>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ABOUT SECTION -->
-
-<section class="about" id="about">
-
-    <div class="about-container">
-
-        <!-- LEFT SIDE -->
-
-        <div class="about-image">
-
-            <img src="./about-fish.jpg" alt="Healthy Aquarium Fish">
-
-            <div class="experience-card">
-                <h2>10+</h2>
-                <p>Years Experience</p>
-            </div>
-
-            <div class="customer-card">
-                ⭐ 4.9 Rating
-            </div>
-
-        </div>
-
-        <!-- RIGHT SIDE -->
-
-        <div class="about-content">
-
-            <span class="section-tag">
-                🌊 About AquaWorld
-            </span>
-
-            <h2>
-                Bringing Healthy &
-                Beautiful Aquarium Fish
-                To Every Home
-            </h2>
-
-            <p class="about-intro">
-
-                AquaWorld Fish is a trusted aquarium fish breeder dedicated
-                to providing healthy, colorful, and premium-quality freshwater
-                fish for hobbyists and professionals alike.
-
-                Every fish is carefully raised under ideal water conditions,
-                monitored by experienced breeders, and delivered safely using
-                professional oxygen packaging.
-
-            </p>
-
-            <div class="about-grid">
-
-                <div class="about-box">
-
-                    <div class="icon">🐠</div>
-
-                    <h3>Healthy Fish</h3>
-
-                    <p>
-                        Professionally bred and regularly health checked.
-                    </p>
-
-                </div>
-
-                <div class="about-box">
-
-                    <div class="icon">🌿</div>
-
-                    <h3>Natural Breeding</h3>
-
-                    <p>
-                        Raised using clean water and balanced nutrition.
-                    </p>
-
-                </div>
-
-                <div class="about-box">
-
-                    <div class="icon">📦</div>
-
-                    <h3>Safe Delivery</h3>
-
-                    <p>
-                        Oxygen-packed and insulated for safe transportation.
-                    </p>
-
-                </div>
-
-                <div class="about-box">
-
-                    <div class="icon">💙</div>
-
-                    <h3>24/7 Support</h3>
-
-                    <p>
-                        Aquarium setup guidance before and after purchase.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- Statistics -->
-
-            <div class="about-stats">
-
-                <div class="stat">
-
-                    <h3 class="counter" data-target="12000">
-                        0
-                    </h3>
-
-                    <span>Happy Customers</span>
-
-                </div>
-
-                <div class="stat">
-
-                    <h3 class="counter" data-target="500">
-                        0
-                    </h3>
-
-                    <span>Fish Species</span>
-
-                </div>
-
-                <div class="stat">
-
-                    <h3 class="counter" data-target="98">
-                        0
-                    </h3>
-
-                    <span>Success Rate %</span>
-
-                </div>
-
-            </div>
-
-            <a href="#fish" class="about-btn">
-
-                Explore Collection →
-
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
- <!-- SHIPPING SECTION -->
-
-<section class="shipping" id="shipping">
-
-    <!-- Floating background bubbles container -->
-    <div class="bubble-container"></div>
-
-    <!-- HEADER -->
-    <div class="shipping-header">
-
-        <span class="section-tag">🚚 Shipping Process</span>
-
-        <h2>Safe & Professional Fish Shipping</h2>
-
-        <p class="shipping-intro">
-            Every fish is carefully prepared using industry-standard live animal shipping
-            procedures to ensure it arrives healthy, stress-free, and ready for its new home.
-        </p>
-
-    </div>
-
-    <!-- SHIPPING STEPS -->
-    <div class="shipping-boxes">
-
-        <div class="ship-box">
-            <div class="ship-icon">🩺</div>
-            <span class="step">Step 01</span>
-            <h3>Health Inspection</h3>
-            <p>Every fish undergoes a complete health inspection. Only active, healthy fish are selected for shipment.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">🍽️</div>
-            <span class="step">Step 02</span>
-            <h3>Fasting Preparation</h3>
-            <p>Fish are fasted for 24 hours to reduce waste and keep water clean during transit.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">💨</div>
-            <span class="step">Step 03</span>
-            <h3>Oxygen Packing</h3>
-            <p>Fish are sealed in oxygen-filled double bags with temperature-controlled water.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">🌡️</div>
-            <span class="step">Step 04</span>
-            <h3>Temperature Protection</h3>
-            <p>Heat or cold packs are added to maintain stable temperature during shipping.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">📦</div>
-            <span class="step">Step 05</span>
-            <h3>Secure Packaging</h3>
-            <p>Insulated and shock-proof packaging prevents stress and movement.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">🚚</div>
-            <span class="step">Step 06</span>
-            <h3>Express Shipping</h3>
-            <p>Orders are shipped using fast courier services for next-day delivery when possible.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">✅</div>
-            <span class="step">Step 07</span>
-            <h3>Live Arrival Guarantee</h3>
-            <p>If a fish arrives DOA, we offer replacement or refund upon proof within 1 hour.</p>
-        </div>
-
-        <div class="ship-box">
-            <div class="ship-icon">💙</div>
-            <span class="step">Step 08</span>
-            <h3>Customer Support</h3>
-            <p>We provide full guidance on acclimation, feeding, and aquarium setup after delivery.</p>
-        </div>
-
-    </div>
-
-    <!-- TRUST / HIGHLIGHT SECTION -->
-    <div class="shipping-highlight">
-
-        <div class="highlight-item">
-            <div class="highlight-icon">🐠</div>
-            <h3>Healthy Fish</h3>
-            <p>Professionally bred and carefully inspected.</p>
-        </div>
-
-        <div class="highlight-item">
-            <div class="highlight-icon">📦</div>
-            <h3>Secure Packaging</h3>
-            <p>High-quality insulation and oxygen packaging.</p>
-        </div>
-
-        <div class="highlight-item">
-            <div class="highlight-icon">🚚</div>
-            <h3>Fast Delivery</h3>
-            <p>Reliable courier with tracking support.</p>
-        </div>
-
-        <div class="highlight-item">
-            <div class="highlight-icon">🛡️</div>
-            <h3>Live Guarantee</h3>
-            <p>Your fish arrives safe or we replace it.</p>
-        </div>
-
-    </div>
-
-</section>
-<!-- tracking SECTION -->
-
-<section class="tracking" id="tracking">
-    <h2>Live Order Tracking</h2>
-
-    <p class="tracking-sub">
-        Enter your tracking ID to view real-time order status.
+  <div class="bubble-field" id="bubbleField"></div>
+  <span class="floating-fish" style="top:22%; left:8%;">🐠</span>
+  <span class="floating-fish" style="top:65%; left:85%; animation-duration:19s; animation-delay:2s;">🐟</span>
+  <span class="floating-fish" style="top:40%; left:78%; animation-duration:14s; animation-delay:5s; font-size:1.4rem;">🐡</span>
+
+  <div class="hero-content">
+    <span class="eyebrow">🌊 Bred With Care, Shipped With Confidence</span>
+    <h1>Premium <span>Aquarium Fish</span> Delivered Safely to Your Doorstep</h1>
+    <p class="hero-subtext">
+      We breed and supply high-quality aquarium fish including Betta, Guppy, Goldfish, and more.
+      Every fish is health-checked, oxygen-packed, and shipped with live arrival care.
     </p>
 
-    <div class="tracking-box">
-
-        <div class="tracking-input">
-            <input type="text" id="trackInput" placeholder="Enter Tracking ID (AWF-2047)">
-            <button onclick="trackOrder()">Track Order</button>
-        </div>
-
-        <div class="tracking-result" id="trackingResult" style="display:none;">
-
-            <div class="tracking-status">
-                <h3>Status: <span id="statusText"></span></h3>
-            </div>
-
-            <div class="tracking-steps">
-
-                <div class="step" id="s1">Order Confirmed</div>
-                <div class="step" id="s2">Fish Packed</div>
-                <div class="step" id="s3">Shipped</div>
-                <div class="step" id="s4">Out for Delivery</div>
-                <div class="step" id="s5">Delivered</div>
-
-            </div>
-
-            <div class="tracking-details">
-                <p><strong>Tracking ID:</strong> AWF-2047</p>
-                <p><strong>Carrier:</strong> Aqua Express Logistics</p>
-                <p><strong>Estimated Delivery:</strong> 24–48 Hours</p>
-            </div>
-
-        </div>
-
+    <div class="hero-buttons">
+      <button onclick="document.getElementById('fish').scrollIntoView({behavior:'smooth'})">🐠 View Fish Collection</button>
+      <button class="secondary" onclick="document.getElementById('shipping').scrollIntoView({behavior:'smooth'})">🚚 Shipping Process</button>
     </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat"><h3 class="counter" data-target="12000">0</h3><p>Happy Customers</p></div>
+      <div class="hero-stat"><h3 class="counter" data-target="500">0</h3><p>Fish Species</p></div>
+      <div class="hero-stat"><h3 class="counter" data-target="98" data-suffix="%">0</h3><p>Live Arrival Rate</p></div>
+    </div>
+
+    <div class="hero-badges">
+      <div class="badge">✔ Live Arrival Guarantee</div>
+      <div class="badge">✔ Safe Oxygen Packaging</div>
+      <div class="badge">✔ Fast 24–48h Delivery</div>
+    </div>
+  </div>
 </section>
 
+<div class="wave" style="background:var(--gray-50);">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" style="transform:translateY(-1px);"><path d="M0,64 C240,110 480,20 720,40 C960,60 1200,110 1440,50 L1440,0 L0,0 Z" fill="#012449"></path></svg>
+</div>
 
-    <!-- TESTIMONIALS -->
+<!-- ============ FEATURED FISH ============ -->
+<section class="fish-section" id="fish">
+  <div class="container">
 
-   <!-- Testimonials Section -->
-<section class="testimonials">
-    <div class="section-header">
-        <h2>What Our Customers Say</h2>
-        <p>Trusted by fish lovers across the country</p>
+    <div class="section-header reveal">
+      <span class="eyebrow">🐠 Premium Collection</span>
+      <h2>Discover Our Featured Aquarium Fish</h2>
+      <p>Browse our carefully selected collection of healthy aquarium fish. Every fish is professionally bred, health-checked, oxygen-packed, and delivered safely to your home.</p>
     </div>
 
-    <div class="testimonial-container">
-
-        <!-- Testimonial 1 -->
-        <div class="testimonial-card">
-            <div class="quote-icon">❝</div>
-
-            <p class="testimonial-text">
-                Beautiful fish and very fast shipping.
-                Highly recommended!
-            </p>
-
-            <div class="customer-info">
-                <img src="./james.jpg" alt="Michael">
-                <div>
-                    <h4>Michael</h4>
-                    <span>Fish Collector</span>
-                </div>
-            </div>
-
-            <div class="stars">
-                ★★★★★
-            </div>
+    <!-- Toolbar: category filter, search, sort -->
+    <div class="fish-toolbar reveal">
+      <div class="filter-pills" id="filterPills">
+        <button class="filter-pill active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="betta">Betta</button>
+        <button class="filter-pill" data-filter="guppy">Guppy</button>
+        <button class="filter-pill" data-filter="tetra">Tetra</button>
+        <button class="filter-pill" data-filter="goldfish">Goldfish</button>
+        <button class="filter-pill" data-filter="angelfish">Angelfish</button>
+      </div>
+      <div class="toolbar-controls">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="fishSearch" placeholder="Search fish...">
         </div>
+        <select class="sort-select" id="sortSelect">
+          <option value="featured">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+        </select>
+      </div>
+    </div>
 
-        <!-- Testimonial 2 -->
-        <div class="testimonial-card">
-            <div class="quote-icon">❝</div>
+    <div class="fish-container" id="fishContainer">
 
-            <p class="testimonial-text">
-                Fish arrived healthy and active.
-                Great service and excellent communication.
-            </p>
-
-            <div class="customer-info">
-                <img src="./james2.jpg" alt="Sarah">
-                <div>
-                    <h4>Sarah</h4>
-                    <span>Aquarium Lover</span>
-                </div>
-            </div>
-
-            <div class="stars">
-                ★★★★★
-            </div>
+      <div class="fish-card reveal" style="--accent:#e74c3c;" data-category="betta" data-price="25" data-name="Koi Betta">
+        <div class="fish-image">
+          <div class="badge-row"><span class="tag-badge">Best Seller</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1676826021886-8a764943b1c0?auto=format&fit=crop&w=700&q=80" alt="Koi Betta" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
         </div>
-
-        <!-- Testimonial 3 -->
-        <div class="testimonial-card">
-            <div class="quote-icon">❝</div>
-
-            <p class="testimonial-text">
-                The quality exceeded my expectations.
-                I will definitely order again.
-            </p>
-
-            <div class="customer-info">
-                <img src="./james2.jpg" alt="David">
-                <div>
-                    <h4>David</h4>
-                    <span>Pet Shop Owner</span>
-                </div>
-            </div>
-
-            <div class="stars">
-                ★★★★★
-            </div>
+        <div class="fish-info">
+          <div class="fish-category">Betta Series</div>
+          <h3>Koi Betta</h3>
+          <p class="fish-desc">Premium colorful Betta with unique marble patterns and vibrant colors.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(248 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$25</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
         </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:#e74c3c;" data-category="betta" data-price="30" data-name="Halfmoon Betta">
+        <div class="fish-image">
+          <div class="badge-row"><span class="tag-badge">Popular</span><span class="stock-badge low">Only 4 left</span></div>
+          <img src="https://images.unsplash.com/photo-1676826021886-8a764943b1c0?auto=format&fit=crop&w=700&q=80&sat=-20&hue=200" alt="Halfmoon Betta" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Betta Series</div>
+          <h3>Halfmoon Betta</h3>
+          <p class="fish-desc">Elegant flowing fins with stunning colors and graceful swimming.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(192 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$30</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:#e74c3c;" data-category="betta" data-price="28" data-name="Crowntail Betta">
+        <div class="fish-image" style="filter:hue-rotate(35deg) saturate(1.15);">
+          <div class="badge-row"><span class="tag-badge">New</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1676826021886-8a764943b1c0?auto=format&fit=crop&w=700&q=80" alt="Crowntail Betta" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Betta Series</div>
+          <h3>Crowntail Betta</h3>
+          <p class="fish-desc">Beautiful spiky fins with a striking and aggressive appearance.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(174 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$28</div><div class="old-price">$34</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:var(--aqua);" data-category="guppy" data-price="12" data-name="Fancy Guppies">
+        <div class="fish-image">
+          <div class="badge-row"><span class="tag-badge">Trending</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1691387747539-f681c5fa73d9?auto=format&fit=crop&w=700&q=80" alt="Fancy Guppy planted tank" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Guppy Series</div>
+          <h3>Fancy Guppies</h3>
+          <p class="fish-desc">Vibrant beginner-friendly fish perfect for community aquariums.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(314 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$12</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:var(--aqua);" data-category="guppy" data-price="10" data-name="Endler Guppy">
+        <div class="fish-image" style="filter:saturate(1.3) hue-rotate(-10deg);">
+          <div class="badge-row"><span class="tag-badge">Hot</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1691387747539-f681c5fa73d9?auto=format&fit=crop&w=700&q=80" alt="Endler Guppy planted tank" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Guppy Series</div>
+          <h3>Endler Guppy</h3>
+          <p class="fish-desc">Small, colorful, active fish ideal for nano aquarium setups.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(156 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$10</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:var(--emerald);" data-category="tetra" data-price="8" data-name="Neon Tetra">
+        <div class="fish-image" style="filter:hue-rotate(160deg) saturate(1.2);">
+          <div class="badge-row"><span class="tag-badge">Favorite</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1691387747539-f681c5fa73d9?auto=format&fit=crop&w=700&q=80" alt="Neon Tetra planted tank" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Tetra Series</div>
+          <h3>Neon Tetra</h3>
+          <p class="fish-desc">Bright blue and red schooling fish ideal for planted aquariums.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(221 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$8</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:#f5b642;" data-category="goldfish" data-price="15" data-name="Goldfish">
+        <div class="fish-image">
+          <div class="badge-row"><span class="tag-badge">Classic</span><span class="stock-badge">In Stock</span></div>
+          <img src="https://images.unsplash.com/photo-1681290060220-bdf0bd4cc972?auto=format&fit=crop&w=700&q=80" alt="Goldfish" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Goldfish Series</div>
+          <h3>Goldfish</h3>
+          <p class="fish-desc">Peaceful freshwater fish known for their beauty and longevity.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(275 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$15</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fish-card reveal" style="--accent:var(--deep);" data-category="angelfish" data-price="18" data-name="Angelfish">
+        <div class="fish-image">
+          <div class="badge-row"><span class="tag-badge">Premium</span><span class="stock-badge low">Only 2 left</span></div>
+          <img src="https://images.unsplash.com/photo-1761753200180-319115462d08?auto=format&fit=crop&w=700&q=80" alt="Angelfish" loading="lazy">
+          <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+          <button class="quickview-btn">Quick View</button>
+        </div>
+        <div class="fish-info">
+          <div class="fish-category">Angelfish Series</div>
+          <h3>Angelfish</h3>
+          <p class="fish-desc">Elegant freshwater angelfish with tall graceful fins and vibrant colors.</p>
+          <div class="fish-rating">⭐⭐⭐⭐⭐ <small>(198 Reviews)</small></div>
+          <div class="fish-footer">
+            <div class="price-wrap"><div class="price">$18</div><div class="old-price">$22</div></div>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
 
     </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
 </section>
-    <!-- CONTACT SECTION -->
 
-  
+<!-- ============ ABOUT ============ -->
+<section class="about" id="about">
+  <div class="container about-container">
+
+    <div class="about-collage reveal">
+      <img class="collage-main" src="https://images.unsplash.com/photo-1691387747539-f681c5fa73d9?auto=format&fit=crop&w=900&q=80" alt="Healthy planted aquarium">
+      <img class="collage-sub" src="https://images.unsplash.com/photo-1676826021886-8a764943b1c0?auto=format&fit=crop&w=600&q=80" alt="Betta fish close up">
+      <div class="experience-card"><h2>10+</h2><p>Years Experience</p></div>
+      <div class="customer-card">⭐ 4.9 Rating</div>
+    </div>
+
+    <div class="about-content reveal">
+      <span class="eyebrow">🌊 About AquaWorld</span>
+      <h2>Bringing Healthy &amp; Beautiful Aquarium Fish To Every Home</h2>
+      <p class="about-intro">
+        AquaWorld Fish is a trusted aquarium fish breeder dedicated to providing healthy, colorful, and premium-quality
+        freshwater fish for hobbyists and professionals alike. Every fish is carefully raised under ideal water conditions,
+        monitored by experienced breeders, and delivered safely using professional oxygen packaging.
+      </p>
+
+      <div class="about-grid">
+        <div class="about-box"><div class="icon">🐠</div><h3>Healthy Fish</h3><p>Professionally bred and regularly health checked.</p></div>
+        <div class="about-box"><div class="icon">🌿</div><h3>Natural Breeding</h3><p>Raised using clean water and balanced nutrition.</p></div>
+        <div class="about-box"><div class="icon">📦</div><h3>Safe Delivery</h3><p>Oxygen-packed and insulated for safe transportation.</p></div>
+        <div class="about-box"><div class="icon">💙</div><h3>24/7 Support</h3><p>Aquarium setup guidance before and after purchase.</p></div>
+      </div>
+
+      <div class="about-stats">
+        <div class="stat"><h3 class="counter" data-target="12000">0</h3><span>Happy Customers</span></div>
+        <div class="stat"><h3 class="counter" data-target="500">0</h3><span>Fish Species</span></div>
+        <div class="stat"><h3 class="counter" data-target="98" data-suffix="%">0</h3><span>Success Rate</span></div>
+      </div>
+
+      <a href="#fish" class="about-btn">Explore Collection <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+  </div>
+</section>
+
+<div class="wave">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0,50 C240,110 480,0 720,30 C960,60 1200,20 1440,60 L1440,90 L0,90 Z" fill="#012449"></path></svg>
+</div>
+
+<!-- ============ SHIPPING ============ -->
+<section class="shipping" id="shipping">
+  <div class="bubble-field" id="bubbleField2"></div>
+
+  <div class="container">
+    <div class="shipping-header reveal">
+      <span class="eyebrow">🚚 Shipping Process</span>
+      <h2>Safe &amp; Professional Fish Shipping</h2>
+      <p class="shipping-intro">Every fish is carefully prepared using industry-standard live animal shipping procedures to ensure it arrives healthy, stress-free, and ready for its new home.</p>
+    </div>
+
+    <div class="shipping-timeline reveal" id="shippingTimeline">
+      <div class="timeline-track"><div class="timeline-fill" id="timelineFill"></div></div>
+
+      <div class="shipping-boxes">
+        <div class="ship-box"><div class="ship-icon">🩺</div><span class="step">Step 01</span><h3>Health Inspection</h3><p>Every fish undergoes a complete health inspection. Only active, healthy fish are selected for shipment.</p></div>
+        <div class="ship-box"><div class="ship-icon">🍽️</div><span class="step">Step 02</span><h3>Fasting Preparation</h3><p>Fish are fasted for 24 hours to reduce waste and keep water clean during transit.</p></div>
+        <div class="ship-box"><div class="ship-icon">💨</div><span class="step">Step 03</span><h3>Oxygen Packing</h3><p>Fish are sealed in oxygen-filled double bags with temperature-controlled water.</p></div>
+        <div class="ship-box"><div class="ship-icon">🌡️</div><span class="step">Step 04</span><h3>Temperature Protection</h3><p>Heat or cold packs are added to maintain stable temperature during shipping.</p></div>
+        <div class="ship-box"><div class="ship-icon">📦</div><span class="step">Step 05</span><h3>Secure Packaging</h3><p>Insulated and shock-proof packaging prevents stress and movement.</p></div>
+        <div class="ship-box"><div class="ship-icon">🚚</div><span class="step">Step 06</span><h3>Express Shipping</h3><p>Orders are shipped using fast courier services for next-day delivery when possible.</p></div>
+        <div class="ship-box"><div class="ship-icon">✅</div><span class="step">Step 07</span><h3>Live Arrival Guarantee</h3><p>If a fish arrives DOA, we offer replacement or refund upon proof within 1 hour.</p></div>
+        <div class="ship-box"><div class="ship-icon">💙</div><span class="step">Step 08</span><h3>Customer Support</h3><p>We provide full guidance on acclimation, feeding, and aquarium setup after delivery.</p></div>
+      </div>
+    </div>
+
+    <div class="shipping-highlight reveal">
+      <div class="highlight-item"><div class="highlight-icon">🐠</div><h3>Healthy Fish</h3><p>Professionally bred and carefully inspected.</p></div>
+      <div class="highlight-item"><div class="highlight-icon">📦</div><h3>Secure Packaging</h3><p>High-quality insulation and oxygen packaging.</p></div>
+      <div class="highlight-item"><div class="highlight-icon">🚚</div><h3>Fast Delivery</h3><p>Reliable courier with tracking support.</p></div>
+      <div class="highlight-item"><div class="highlight-icon">🛡️</div><h3>Live Guarantee</h3><p>Your fish arrives safe or we replace it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRACKING ============ -->
+<section class="tracking" id="tracking">
+  <div class="container">
+    <div class="tracking-header reveal">
+      <h2>Live Order Tracking</h2>
+      <p class="tracking-sub">Enter your tracking ID to view real-time order status.</p>
+    </div>
+
+    <div class="tracking-dashboard reveal">
+      <div class="tracking-input">
+        <input type="text" id="trackInput" placeholder="Enter Tracking ID (AWF-2047)">
+        <button onclick="trackOrder()">Track Order</button>
+      </div>
+
+      <div class="tracking-result" id="trackingResult" style="display:none;">
+        <div class="tracking-status">
+          <h3>Status: <span id="statusText"></span></h3>
+          <span class="status-pill" id="statusPill">In Transit</span>
+        </div>
+
+        <!-- simple route-map illustration with an animated shipment dot -->
+        <div class="route-map">
+          <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
+            <path id="routePath" d="M20,90 C160,10 260,150 320,60 C380,-10 480,90 580,30" fill="none" stroke="#CBD8E6" stroke-width="4" stroke-linecap="round"/>
+            <path class="route-progress" id="routeProgress" d="M20,90 C160,10 260,150 320,60 C380,-10 480,90 580,30" fill="none" stroke="url(#routeGrad)" stroke-width="4" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#023E8A"/>
+                <stop offset="100%" stop-color="#2ECC71"/>
+              </linearGradient>
+            </defs>
+            <circle cx="20" cy="90" r="7" fill="#023E8A"/>
+            <circle cx="580" cy="30" r="7" fill="#2ECC71"/>
+            <circle id="shipDot" cx="20" cy="90" r="8" fill="#00B4D8" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <div class="tracking-steps p1" id="trackingSteps">
+          <div class="step" id="s1">Order Confirmed</div>
+          <div class="step" id="s2">Fish Packed</div>
+          <div class="step" id="s3">Shipped</div>
+          <div class="step" id="s4">Out for Delivery</div>
+          <div class="step" id="s5">Delivered</div>
+        </div>
+
+        <div class="tracking-details">
+          <p><strong>Tracking ID:</strong> AWF-2047</p>
+          <p><strong>Carrier:</strong> Aqua Express Logistics</p>
+          <p><strong>Estimated Delivery:</strong> 24–48 Hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2>What Our Customers Say</h2>
+      <p>Trusted by fish lovers across the country</p>
+    </div>
+
+    <div class="testimonial-viewport reveal">
+      <div class="testimonial-track" id="testimonialTrack">
+
+        <div class="testimonial-slide">
+          <div class="testimonial-card">
+            <div class="quote-icon">&#10078;</div>
+            <p class="testimonial-text">Beautiful fish and very fast shipping. Highly recommended!</p>
+            <div class="customer-info">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=b6e3f4" alt="Michael">
+              <div><h4>Michael <i class="fa-solid fa-circle-check" title="Verified buyer"></i></h4><span>Fish Collector</span></div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+
+        <div class="testimonial-slide">
+          <div class="testimonial-card">
+            <div class="quote-icon">&#10078;</div>
+            <p class="testimonial-text">Fish arrived healthy and active. Great service and excellent communication.</p>
+            <div class="customer-info">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=ffd5dc" alt="Sarah">
+              <div><h4>Sarah <i class="fa-solid fa-circle-check" title="Verified buyer"></i></h4><span>Aquarium Lover</span></div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+
+        <div class="testimonial-slide">
+          <div class="testimonial-card">
+            <div class="quote-icon">&#10078;</div>
+            <p class="testimonial-text">The quality exceeded my expectations. I will definitely order again.</p>
+            <div class="customer-info">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=c0f2e0" alt="David">
+              <div><h4>David <i class="fa-solid fa-circle-check" title="Verified buyer"></i></h4><span>Pet Shop Owner</span></div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="testimonial-dots" id="testimonialDots"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
 <section class="contact" id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2>Contact Us</h2>
+      <p>Questions about an order or an aquarium setup? Send us a message and we'll get back to you within one business day.</p>
+    </div>
 
-    <h2>Contact Us</h2>
+    <div class="contact-grid">
 
-    <form id="contactForm">
-
-        <!-- NAME -->
-        <div class="input-box">
-            <input type="text" id="name" placeholder="Your Name">
-            <small class="error"></small>
+      <form id="contactForm" class="contact-form-wrap reveal" novalidate>
+        <div class="float-field">
+          <input type="text" id="name" placeholder=" ">
+          <label for="name">Your Name</label>
+          <small class="error"></small>
         </div>
-
-        <!-- EMAIL -->
-        <div class="input-box">
-            <input type="email" id="email" placeholder="Your Email">
-            <small class="error"></small>
+        <div class="float-field">
+          <input type="email" id="email" placeholder=" ">
+          <label for="email">Your Email</label>
+          <small class="error"></small>
         </div>
-
-        <!-- SUBJECT -->
-        <div class="input-box">
-            <input type="text" id="subject" placeholder="Subject">
-            <small class="error"></small>
+        <div class="float-field">
+          <input type="text" id="subject" placeholder=" ">
+          <label for="subject">Subject</label>
+          <small class="error"></small>
         </div>
-
-        <!-- MESSAGE -->
-        <div class="input-box">
-            <textarea id="message" placeholder="Your Message" rows="6"></textarea>
-            <small class="error"></small>
+        <div class="float-field">
+          <textarea id="message" rows="5" placeholder=" "></textarea>
+          <label for="message">Your Message</label>
+          <small class="error"></small>
         </div>
-
-        <!-- SUBMIT BUTTON -->
         <button type="submit">Send Message</button>
-
-        <!-- SUCCESS MESSAGE -->
         <p id="successMessage"></p>
+      </form>
 
-    </form>
+      <div class="contact-side reveal">
+        <div class="info-card"><div class="icon"><i class="fa-solid fa-location-dot"></i></div><div><h4>Location</h4><p>USA Nationwide Shipping</p></div></div>
+        <div class="info-card"><div class="icon"><i class="fa-solid fa-envelope"></i></div><div><h4>Email</h4><p>support@aquaworldfish.com</p></div></div>
+        <div class="info-card"><div class="icon"><i class="fa-solid fa-phone"></i></div><div><h4>Phone</h4><p>+1 (000) 000-0000</p></div></div>
+        <div class="map-embed">
+          <iframe src="https://maps.google.com/maps?q=New%20York%2C%20USA&t=&z=10&ie=UTF8&iwloc=&output=embed" loading="lazy" title="AquaWorld shipping hub location"></iframe>
+        </div>
+      </div>
 
+    </div>
+  </div>
 </section>
 
-    <!-- FOOTER -->
+<a class="whatsapp-fab" href="https://wa.me/10000000000" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
-  <footer class="footer">
+<!-- ============ NEWSLETTER ============ -->
+<section class="newsletter">
+  <div class="container reveal">
+    <h2>Get Fish Care Tips &amp; Exclusive Offers</h2>
+    <p>Join our newsletter for aquarium guides, new arrivals, and subscriber-only discounts.</p>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" id="newsletterEmail" placeholder="Enter your email">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="newsletter-msg" id="newsletterMsg"></p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
     <div class="footer-container">
-
-        <div class="footer-brand">
-            <h2>AquaWorld Fish</h2>
-            <p>Premium aquarium fish delivered safely to your doorstep.</p>
+      <div class="footer-brand">
+        <h2>AquaWorld Fish</h2>
+        <p>Premium aquarium fish delivered safely to your doorstep.</p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
         </div>
+      </div>
 
+      <div class="footer-col">
+        <h3>Quick Links</h3>
         <div class="footer-links">
-            <h3>Quick Links</h3>
-            <a href="#home">Home</a>
-            <a href="#fish">Fish</a>
-            <a href="#about">About</a>
-            <a href="#shipping">Shipping</a>
-            <a href="#contact">Contact</a>
+          <a href="#home">Home</a>
+          <a href="#fish">Fish</a>
+          <a href="#about">About</a>
+          <a href="#shipping">Shipping</a>
+          <a href="#contact">Contact</a>
         </div>
+      </div>
 
-        <div class="footer-contact">
-            <h3>Contact</h3>
-
-            <p>📍 USA Nationwide Shipping</p>
-            <p>📧 support@aquaworldfish.com</p>
-            <p>📞 +1 (000) 000-0000</p>
-
-            <div class="social-icons">
-
-                <a href="https://www.facebook.com/" target="_blank" class="facebook">
-                    <i class="fab fa-facebook-f"></i> Facebook
-                </a>
-
-              
-            </div>
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <div class="footer-links">
+          <span>📍 USA Nationwide Shipping</span>
+          <span>📧 support@aquaworldfish.com</span>
+          <span>📞 +1 (000) 000-0000</span>
         </div>
+      </div>
 
+      <div class="footer-col">
+        <h3>Why Trust Us</h3>
+        <div class="trust-badges">
+          <span><i class="fa-solid fa-shield-halved"></i> Secure Checkout</span>
+          <span><i class="fa-solid fa-rotate-left"></i> Live Arrival Guarantee</span>
+          <span><i class="fa-solid fa-truck-fast"></i> 24–48h Delivery</span>
+        </div>
+      </div>
     </div>
 
     <div class="footer-bottom">
-        <p>© 2026 James AquaWorld Aquarium Fish | All Rights Reserved</p>
+      <p>© 2026 James AquaWorld Aquarium Fish | All Rights Reserved</p>
+      <div class="payment-icons">
+        <i class="fa-brands fa-cc-visa" title="Visa"></i>
+        <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+        <i class="fa-brands fa-cc-paypal" title="PayPal"></i>
+        <i class="fa-brands fa-cc-amex" title="Amex"></i>
+      </div>
     </div>
+  </div>
 </footer>
 
+<div class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></div>
 
-    <script src="script.js"></script>
+<script>
+/* ============================================================
+   1. NAVBAR SCROLL STATE + ACTIVE LINK + MOBILE MENU
+   ============================================================ */
+const header = document.getElementById('header');
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 40);
+  backToTop.classList.toggle('show', window.scrollY > 500);
+}, { passive:true });
+backToTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+const navAnchors = document.querySelectorAll('.nav-links a');
+const sections = ['home','fish','about','shipping','tracking','contact'].map(id => document.getElementById(id)).filter(Boolean);
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+    }
+  });
+}, { rootMargin: '-45% 0px -45% 0px' });
+sections.forEach(s => navObserver.observe(s));
+
+const menuToggle = document.getElementById('menuToggle');
+const mobilePanel = document.getElementById('mobilePanel');
+const closePanel = document.getElementById('closePanel');
+const scrim = document.getElementById('scrim');
+function openMenu(){ mobilePanel.classList.add('open'); scrim.classList.add('show'); }
+function closeMenu(){ mobilePanel.classList.remove('open'); scrim.classList.remove('show'); }
+menuToggle.addEventListener('click', openMenu);
+closePanel.addEventListener('click', closeMenu);
+scrim.addEventListener('click', closeMenu);
+mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+/* ============================================================
+   2. HERO BUBBLE FIELD
+   ============================================================ */
+function spawnBubbles(containerId, count){
+  const field = document.getElementById(containerId);
+  if (!field) return;
+  for (let i = 0; i < count; i++){
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 6 + Math.random() * 22;
+    b.style.width = size + 'px';
+    b.style.height = size + 'px';
+    b.style.left = Math.random() * 100 + '%';
+    b.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+    const duration = 9 + Math.random() * 10;
+    b.style.animationDuration = duration + 's';
+    b.style.animationDelay = (Math.random() * duration) + 's';
+    field.appendChild(b);
+  }
+}
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduceMotion) { spawnBubbles('bubbleField', 22); spawnBubbles('bubbleField2', 18); }
+
+/* ============================================================
+   3. SCROLL REVEAL + ANIMATED COUNTERS
+   ============================================================ */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach((el, i) => { el.style.transitionDelay = (i % 4) * 70 + 'ms'; revealObserver.observe(el); });
+
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target, 10);
+    const suffix = el.dataset.suffix || '+';
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.floor(progress * target).toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    counterObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+/* Fill the shipping progress line once its section scrolls into view */
+const timelineFill = document.getElementById('timelineFill');
+new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) { timelineFill.style.width = '100%'; } });
+}, { threshold: 0.3 }).observe(document.getElementById('shippingTimeline'));
+
+/* ============================================================
+   4. FISH COLLECTION — filter, search, sort, wishlist, cart, pagination
+   ============================================================ */
+const fishContainer = document.getElementById('fishContainer');
+const allCards = Array.from(fishContainer.querySelectorAll('.fish-card'));
+const filterPills = document.querySelectorAll('.filter-pill');
+const searchInput = document.getElementById('fishSearch');
+const sortSelect = document.getElementById('sortSelect');
+const paginationEl = document.getElementById('pagination');
+const PAGE_SIZE = 4;
+let currentPage = 1;
+let activeFilter = 'all';
+let searchTerm = '';
+
+function getFilteredCards(){
+  return allCards.filter(card => {
+    const matchesFilter = activeFilter === 'all' || card.dataset.category === activeFilter;
+    const matchesSearch = !searchTerm || card.dataset.name.toLowerCase().includes(searchTerm) || card.dataset.category.includes(searchTerm);
+    return matchesFilter && matchesSearch;
+  });
+}
+
+function applySort(cards){
+  const sorted = cards.slice();
+  const mode = sortSelect.value;
+  if (mode === 'price-asc') sorted.sort((a,b) => a.dataset.price - b.dataset.price);
+  else if (mode === 'price-desc') sorted.sort((a,b) => b.dataset.price - a.dataset.price);
+  else if (mode === 'name-asc') sorted.sort((a,b) => a.dataset.name.localeCompare(b.dataset.name));
+  return sorted;
+}
+
+function renderFish(){
+  const filtered = applySort(getFilteredCards());
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  currentPage = Math.min(currentPage, totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const visibleSet = new Set(filtered.slice(start, start + PAGE_SIZE));
+
+  // Reorder DOM to match sort order, then show/hide per page + filter/search
+  filtered.forEach(card => fishContainer.appendChild(card));
+  allCards.forEach(card => {
+    const shouldShow = filtered.includes(card) && visibleSet.has(card);
+    card.classList.toggle('is-hidden', !shouldShow);
+  });
+
+  let emptyEl = fishContainer.querySelector('.fish-empty');
+  if (filtered.length === 0) {
+    if (!emptyEl) {
+      emptyEl = document.createElement('div');
+      emptyEl.className = 'fish-empty';
+      emptyEl.textContent = 'No fish match your search — try a different term or category.';
+      fishContainer.appendChild(emptyEl);
+    }
+  } else if (emptyEl) {
+    emptyEl.remove();
+  }
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  paginationEl.innerHTML = '';
+  if (totalPages <= 1) return;
+
+  const prev = document.createElement('button');
+  prev.className = 'page-btn nav-btn';
+  prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i> Prev';
+  prev.disabled = currentPage === 1;
+  prev.addEventListener('click', () => { currentPage--; renderFish(); });
+  paginationEl.appendChild(prev);
+
+  for (let p = 1; p <= totalPages; p++){
+    const btn = document.createElement('button');
+    btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+    btn.textContent = p;
+    btn.addEventListener('click', () => { currentPage = p; renderFish(); });
+    paginationEl.appendChild(btn);
+  }
+
+  const next = document.createElement('button');
+  next.className = 'page-btn nav-btn';
+  next.innerHTML = 'Next <i class="fa-solid fa-chevron-right"></i>';
+  next.disabled = currentPage === totalPages;
+  next.addEventListener('click', () => { currentPage++; renderFish(); });
+  paginationEl.appendChild(next);
+}
+
+filterPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    filterPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeFilter = pill.dataset.filter;
+    currentPage = 1;
+    renderFish();
+  });
+});
+searchInput.addEventListener('input', () => { searchTerm = searchInput.value.trim().toLowerCase(); currentPage = 1; renderFish(); });
+sortSelect.addEventListener('change', () => { currentPage = 1; renderFish(); });
+
+/* Wishlist toggle */
+fishContainer.addEventListener('click', (e) => {
+  const wishBtn = e.target.closest('.wishlist-btn');
+  if (wishBtn) {
+    wishBtn.classList.toggle('active');
+    const icon = wishBtn.querySelector('i');
+    icon.classList.toggle('fa-regular');
+    icon.classList.toggle('fa-solid');
+    return;
+  }
+  const cartBtn = e.target.closest('.add-cart-btn');
+  if (cartBtn && !cartBtn.classList.contains('added')) {
+    const original = cartBtn.textContent;
+    cartBtn.textContent = 'Added ✓';
+    cartBtn.classList.add('added');
+    setTimeout(() => { cartBtn.textContent = original; cartBtn.classList.remove('added'); }, 1600);
+    return;
+  }
+  const quickBtn = e.target.closest('.quickview-btn');
+  if (quickBtn) {
+    const card = quickBtn.closest('.fish-card');
+    alert('Quick View: ' + card.dataset.name + ' — $' + card.dataset.price + '\n\n(A full quick-view modal with gallery and details can be wired in here.)');
+  }
+});
+
+renderFish();
+
+/* ============================================================
+   5. TESTIMONIAL CAROUSEL — auto-slide, dots, pause on hover
+   ============================================================ */
+const track = document.getElementById('testimonialTrack');
+const slides = track.querySelectorAll('.testimonial-slide');
+const dotsWrap = document.getElementById('testimonialDots');
+let activeSlide = 0;
+let carouselTimer;
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
+  dot.addEventListener('click', () => goToSlide(i));
+  dotsWrap.appendChild(dot);
+});
+const dots = dotsWrap.querySelectorAll('.dot');
+
+function goToSlide(i){
+  activeSlide = i;
+  track.style.transform = 'translateX(-' + (i * 100) + '%)';
+  dots.forEach((d, di) => d.classList.toggle('active', di === i));
+}
+function nextSlide(){ goToSlide((activeSlide + 1) % slides.length); }
+function startCarousel(){ carouselTimer = setInterval(nextSlide, 4500); }
+function stopCarousel(){ clearInterval(carouselTimer); }
+startCarousel();
+track.closest('.testimonials').addEventListener('mouseenter', stopCarousel);
+track.closest('.testimonials').addEventListener('mouseleave', startCarousel);
+
+/* ============================================================
+   6. LIVE ORDER TRACKING (with animated route-map dot)
+   ============================================================ */
+function trackOrder(){
+  const input = document.getElementById('trackInput');
+  const result = document.getElementById('trackingResult');
+  const statusText = document.getElementById('statusText');
+  const statusPill = document.getElementById('statusPill');
+  const stepsWrap = document.getElementById('trackingSteps');
+  const shipDot = document.getElementById('shipDot');
+  const routeProgress = document.getElementById('routeProgress');
+  const routePathLength = document.getElementById('routePath').getTotalLength ? document.getElementById('routePath').getTotalLength() : 600;
+  routeProgress.style.strokeDasharray = routePathLength;
+  const stepIds = ['s1','s2','s3','s4','s5'];
+  const stepEls = stepIds.map(id => document.getElementById(id));
+
+  if (!input.value.trim()){
+    input.style.borderColor = '#e74c3c'; input.style.border = '1.5px solid #e74c3c';
+    input.focus();
+    setTimeout(() => { input.style.border = ''; }, 1500);
+    return;
+  }
+
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  stepEls.forEach(el => el.classList.remove('done'));
+  stepsWrap.className = 'tracking-steps p1';
+  statusText.textContent = 'Processing...';
+  routeProgress.style.strokeDashoffset = routePathLength;
+  const path = document.getElementById('routePath');
+
+  const stages = [
+    { step:0, label:'Order Confirmed', cls:'p1', pillLabel:'Processing', dist:0 },
+    { step:1, label:'Fish Packed',      cls:'p2', pillLabel:'Preparing',  dist:0.15 },
+    { step:2, label:'Shipped',          cls:'p3', pillLabel:'In Transit', dist:0.45 },
+    { step:3, label:'Out for Delivery', cls:'p4', pillLabel:'Nearby',     dist:0.8 },
+    { step:4, label:'Delivered',        cls:'p5', pillLabel:'Delivered',  dist:1 },
+  ];
+
+  stages.forEach((stage, i) => {
+    setTimeout(() => {
+      stepEls[stage.step].classList.add('done');
+      stepsWrap.className = 'tracking-steps ' + stage.cls;
+      statusText.textContent = stage.label;
+      statusPill.textContent = stage.pillLabel;
+      routeProgress.style.strokeDashoffset = routePathLength * (1 - stage.dist);
+      const pt = path.getPointAtLength ? path.getPointAtLength(routePathLength * stage.dist) : {x:20,y:90};
+      shipDot.setAttribute('cx', pt.x);
+      shipDot.setAttribute('cy', pt.y);
+    }, i * 700);
+  });
+}
+
+/* ============================================================
+   7. CONTACT FORM — floating labels + validation
+   ============================================================ */
+document.querySelectorAll('.float-field input, .float-field textarea').forEach(field => {
+  field.addEventListener('input', () => field.classList.toggle('filled', field.value.trim().length > 0));
+});
+
+const contactForm = document.getElementById('contactForm');
+contactForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const fields = [
+    { id:'name', test: v => v.trim().length > 1, msg:'Please enter your name.' },
+    { id:'email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), msg:'Please enter a valid email address.' },
+    { id:'subject', test: v => v.trim().length > 2, msg:'Please add a subject.' },
+    { id:'message', test: v => v.trim().length > 9, msg:'Message should be at least 10 characters.' },
+  ];
+  let valid = true;
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const box = el.closest('.float-field');
+    const errorEl = box.querySelector('.error');
+    if (!f.test(el.value)) { valid = false; box.classList.add('has-error'); errorEl.textContent = f.msg; }
+    else { box.classList.remove('has-error'); errorEl.textContent = ''; }
+  });
+
+  const successMessage = document.getElementById('successMessage');
+  if (valid) {
+    successMessage.textContent = "✔ Message sent! We'll be in touch within one business day.";
+    successMessage.classList.add('show');
+    contactForm.reset();
+    document.querySelectorAll('.float-field input, .float-field textarea').forEach(f => f.classList.remove('filled'));
+    setTimeout(() => successMessage.classList.remove('show'), 5000);
+  } else {
+    successMessage.classList.remove('show');
+  }
+});
+
+/* ============================================================
+   8. NEWSLETTER — email validation + animated success
+   ============================================================ */
+document.getElementById('newsletterForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const emailInput = document.getElementById('newsletterEmail');
+  const msg = document.getElementById('newsletterMsg');
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value);
+  msg.classList.remove('show');
+  if (valid) {
+    msg.textContent = '✔ Subscribed! Check your inbox for a welcome email.';
+    emailInput.value = '';
+  } else {
+    msg.textContent = 'Please enter a valid email address.';
+  }
+  requestAnimationFrame(() => msg.classList.add('show'));
+});
+</script>
 
 </body>
 </html>
-
-
-
-
-
